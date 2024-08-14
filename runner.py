@@ -1,5 +1,5 @@
 import streamlit as st
-
+from utility import classify_sentiment
 
 st.title("Review Insight", )
 st.write(" Automatically summarize product details and analyze customer sentiment for informed purchase decisions")

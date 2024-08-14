@@ -1,0 +1,8 @@
+robert_model:
+  type: roberta
+  model_name: "cardiffnlp/twitter-roberta-base-sentiment"
+  max_seq_length: 512
+
+
+cache_dir: 'D:\models'
+  
