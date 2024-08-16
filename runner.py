@@ -1,10 +1,12 @@
 import streamlit as st
-from utility import classify_sentiment
+from sentiment_analysis import classify_sentiment, get_sentiment_score
+st.set_page_config(page_title="Review Insight", page_icon=":web:")
+st.title("Review Insight :web:")
 
-st.title("Review Insight", )
 st.write(" Automatically summarize product details and analyze customer sentiment for informed purchase decisions")
 
 product_link = st.text_input(label="Product Link:", placeholder="Enter Amazon Product Link:", label_visibility='hidden', key="product_link")
+st.warning('Kindly wait a while between each scrapping request')#use proxy services to avoid being blocked #use selenium to automate the process or develop some web scrapper
 
 if st.button("Analyze Product"):
     st.write("Analyzing product...")

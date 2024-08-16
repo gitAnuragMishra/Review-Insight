@@ -2,7 +2,7 @@ import os
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
-import yaml
+import yaml 
 import numpy
 import random
 os.environ['HF_HOME'] = r'D:\models'
@@ -35,12 +35,12 @@ def get_sentiment_score(text):
 
 
 def classify_sentiment(sentiment_scores):
-    # Extract the scores from the dictionary
+    
     neg_score = sentiment_scores['roberta_neg']
     neu_score = sentiment_scores['roberta_neu']
     pos_score = sentiment_scores['roberta_pos']
     
-    # Determine the dominant sentiment
+    
     if pos_score > 0.9:
         return random.choice(["Extremely Satisfied", "Overwhelmingly Positive", "Highly Favorable", "Exceptionally Positive"])
     elif pos_score > 0.6:
