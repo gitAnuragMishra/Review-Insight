@@ -1,8 +1,8 @@
 import os
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer #type: ignore
 from transformers import AutoModelForSequenceClassification
-from scipy.special import softmax
-import yaml 
+from scipy.special import softmax #type: ignore
+import yaml #type: ignore
 import numpy
 import random
 os.environ['HF_HOME'] = r'D:\models'

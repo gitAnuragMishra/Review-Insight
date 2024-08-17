@@ -1,8 +1,8 @@
-import requests
-import pandas as pd
-from bs4 import BeautifulSoup
+import requests #type: ignore
+import pandas as pd #type: ignore
+from bs4 import BeautifulSoup  #type: ignore
 import random
-import yaml
+import yaml #type: ignore
 
 with open('proxylist.yaml', 'r') as file:
     config_proxy = yaml.safe_load(file)
