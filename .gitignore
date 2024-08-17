@@ -2,4 +2,3 @@ review-env/
 output/
 __pycache__/
 proxylist.yaml
-config.yaml
