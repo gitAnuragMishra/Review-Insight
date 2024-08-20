@@ -38,3 +38,4 @@ if __name__ == '__main__':
 
 
 #For the time being, we shall work with the html file
+#we are not using this webscrapper.py right now in this project, only after having a proxy service

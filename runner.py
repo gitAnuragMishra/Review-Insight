@@ -81,7 +81,7 @@ def landing_page():
                 '''Scraping directly from Amazon is tricky due to its strong anti-scraping measures like rate limiting and CAPTCHA challenges, which often lead to IP blocking after each request.\n\n Without using a paid proxy service, it becomes increasingly challenging. As an alternative, downloading the Amazon link as an HTML file to work with may be a more feasible solution for the time being'''
             )
         st.write('---')
-        st.subheader("Instructions")
+        
         
 
 
