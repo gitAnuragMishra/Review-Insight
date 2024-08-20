@@ -5,6 +5,7 @@ from scipy.special import softmax #type: ignore
 import yaml #type: ignore
 import numpy
 import random
+import torch
 os.environ['HF_HOME'] = r'D:\models'
 os.environ['HF_HUB_CACHE'] = r'D:\models'
 
@@ -21,7 +22,12 @@ def initialize_model():
 def get_sentiment_score(text):
     
     tokenizer, model = initialize_model()
-    encoded_text = tokenizer(text, return_tensors='pt')
+    encoded_text = tokenizer(text, return_tensors='pt', truncation=True, padding = 'max_length', max_length=512)
+    
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
+    encoded_text = encoded_text.to(device)
+    
     output = model(**encoded_text)
     tensor_scores = output[0][0].detach().tolist()
     numpy_scores = numpy.array(tensor_scores)
@@ -33,8 +39,7 @@ def get_sentiment_score(text):
     }
     return scores_dict
 
-
-def classify_sentiment(sentiment_scores):
+def classify_sentiment(sentiment_scores): #input = dict, output = string
     
     neg_score = sentiment_scores['roberta_neg']
     neu_score = sentiment_scores['roberta_neu']
@@ -43,17 +48,68 @@ def classify_sentiment(sentiment_scores):
     
     if pos_score > 0.9:
         return random.choice(["Extremely Satisfied", "Overwhelmingly Positive", "Highly Favorable", "Exceptionally Positive"])
-    elif pos_score > 0.6:
-        return random.choice(["Pleased", "Satisfied", "Favorable", "Happy", "Content", "Encouraging"])
+    elif pos_score > 0.6 or neg_score < 0.2:
+        return random.choice(["Pleased", "Satisfied", "Favorable", "Happy"])
     elif neu_score > 0.4:
-        return random.choice(["Moderate", "Mixed", "Indifferent", "Balanced", "Unremarkable", "Average"])
-    elif neg_score > 0.6:
-        return random.choice(["Dissatisfied", "Unfavorable", "Unhappy", "Disappointed", "Critical", "Subpar"])
+        return random.choice(["Moderate", "Mixed", "Balanced", "Average"])
+    elif neg_score > 0.6 or pos_score < 0.2:
+        return random.choice(["Dissatisfied", "Unfavorable", "Unhappy", "Disappointed"])
     elif neg_score > 0.9:
-        return random.choice(["Extremely Dissatisfied", "Overwhelmingly Negative", "Very Unhappy", "Appalled", "Highly Critical", "Strongly Negative"])
+        return random.choice(["Extremely Dissatisfied", "Overwhelmingly Negative", "Very Unhappy", "Strongly Negative"])
     else:
-        return "Mixed/Uncertain"
+        return "Uncertain"
 
+def aggregate_sentiment_scores(reviews): #input = list of strings, output = dict
+    total_scores = {'roberta_neg': 0, 'roberta_neu': 0, 'roberta_pos': 0}
+    
+    for review in reviews:
+        sentiment_scores = get_sentiment_score(review)
+        total_scores['roberta_neg'] += sentiment_scores['roberta_neg']
+        total_scores['roberta_neu'] += sentiment_scores['roberta_neu']
+        total_scores['roberta_pos'] += sentiment_scores['roberta_pos']
+    
+    #total_scores = {k: v / len(reviews) for k, v in total_scores.items()}
+    num_reviews = len(reviews)
+    aggregate_scores = {
+        'roberta_neg': total_scores['roberta_neg'] / num_reviews,
+        'roberta_neu': total_scores['roberta_neu'] / num_reviews,
+        'roberta_pos': total_scores['roberta_pos'] / num_reviews
+    }
+    
+    return aggregate_scores
+
+def classify_overall_sentiment(reviews):
+    aggregated_score = aggregate_sentiment_scores(reviews)
+    overall_sentiment = classify_sentiment(aggregated_score)
+    return aggregated_score, overall_sentiment
+
+def get_star_rating(aggregated_scores):
+
+    neg_score = aggregated_scores['roberta_neg']
+    neu_score = aggregated_scores['roberta_neu']
+    pos_score = aggregated_scores['roberta_pos']
+    
+    star_ratings = {
+        "5 stars": "⭐⭐⭐⭐⭐",
+        "4 stars": "⭐⭐⭐⭐",
+        "3 stars": "⭐⭐⭐",
+        "2.5 stars": "⭐⭐✨",
+        "2 stars": "⭐⭐",
+        "1 star": "⭐"
+    } # emoji dictionary
+    
+    if pos_score > 0.9:
+        return star_ratings["5 stars"]
+    elif pos_score > 0.6 or neg_score < 0.2:
+        return star_ratings["4 stars"]
+    elif neu_score > 0.4:
+        return star_ratings["3 stars"]
+    elif neg_score > 0.6 or pos_score < 0.2:
+        return star_ratings["2 stars"]
+    elif neg_score > 0.9:
+        return star_ratings["1 star"]
+    else:
+        return star_ratings["2.5 stars"]
 
 def main():
     text = "I love this product"

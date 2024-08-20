@@ -7,7 +7,6 @@ import yaml #type: ignore
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
-#save html file
 
 def save_uploaded_file(uploaded_files, save_folder):
     # Create the folder if it doesn't exist
@@ -26,7 +25,12 @@ def save_uploaded_file(uploaded_files, save_folder):
     return saved_file_paths
 
 
-# Load the HTML file
+def extract_product_name(uploaded_html_files):
+    product_names = []
+    for file in uploaded_html_files:
+        product_names.append(file.name.replace('.html', ' ').replace('_ Amazon.in_', '')) # file.name is a string #learnt a new thing, we can chain .replace() wow!!
+    return product_names
+
 def extract_reviews_from_files(folder_path) -> list:
     all_reviews = []
 
@@ -77,3 +81,4 @@ def extract_product_descriptions_from_folder(folder_path) -> list:
                 product_descriptions.append("Product description not found.")
 
     return product_descriptions
+

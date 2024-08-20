@@ -3,8 +3,11 @@ robert_model:
   model_name: "cardiffnlp/twitter-roberta-base-sentiment"
   max_seq_length: 512
 
+distilbart_summarization_model:
+  type: t5
+  model_name: "sshleifer/distilbart-cnn-12-6"
+  max_seq_length: 512
 
 cache_dir: 'D:\models'
-
 
 html_file_path: 'E:\review-insight\html_files'
