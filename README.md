@@ -54,15 +54,14 @@ Review-Insight is an automated tool designed to extract, summarize, and analyze 
 2. Use the web interface to upload your HTML files, extract and analyze product information, and view summarized results.
 
 ## Project Structure
-review-insight/
-│
-├── app.py                         # Main entry point for the Streamlit application
-├── config.yaml                    # Configuration file for model paths and other settings
-├── requirements.txt               # Python dependencies
-├── sentiment_analysis.py          # Contains sentiment analysis functions
-├── summariser.py                  # Summarization module
-├── html_handler.py                # Handles extraction of data from HTML files
-└── README.md                      # Project documentation
+
+- app.py                         # Main entry point for the Streamlit application
+- config.yaml                    # Configuration file for model paths and other settings
+- requirements.txt               # Python dependencies
+- sentiment_analysis.py          # Contains sentiment analysis functions
+- summariser.py                  # Summarization module
+- html_handler.py                # Handles extraction of data from HTML files
+- README.md                      # Project documentation
 
 
 ## Features
