@@ -81,6 +81,10 @@ def landing_page():
                 '''Scraping directly from Amazon is tricky due to its strong anti-scraping measures like rate limiting and CAPTCHA challenges, which often lead to IP blocking after each request.\n\n Without using a paid proxy service, it becomes increasingly challenging. As an alternative, downloading the Amazon link as an HTML file to work with may be a more feasible solution for the time being'''
             )
         st.write('---')
+
+        if st.button('Instruction Page'):
+            st.session_state['page'] = 3
+            st.rerun()
         
         
 
@@ -92,7 +96,7 @@ def landing_page():
 
 
 def analysis_page():
-    st.set_page_config(page_title="Review Insight - Analysis", page_icon=":bar_chart:")
+    st.set_page_config(page_title="Review Insight - Analysis", page_icon=":shopping_trolley:")
     st.header("Product Analysis Results :bar_chart:", divider=True)
     st.markdown(" #### Here are the summarized product details and sentiment analysis:")
     st.write("---")
@@ -145,6 +149,36 @@ def analysis_page():
         st.rerun() 
         ##IMPORTANT: DO NOT RERUN, as the summarisation will rerun, taking up a lot of time
 
+def steps_page():
+    st.set_page_config(page_title="Review Insight - Instructions", page_icon=":shopping_trolley:")
+    st.header("Instructions ", divider=True)
+    st.markdown("""
+    #### How to Download the .html File from an Amazon Product Page:
+
+    1. **Open the Amazon Product Page**:
+       - In your web browser, navigate to the Amazon product page that you want to analyze.
+
+    2. **Save the Webpage as HTML**:
+       - Right-click on the page and select **Save as...** from the context menu.
+       - Else, click **CTRL + S**.
+       - In the dialog that opens, choose **Webpage, HTML Only (*.html,*.htm)** as the format.
+       - Save the file to your computer. This will save the *.html* file at your desired location.
+
+    3. **Upload the HTML File**:
+       - Return to the Review Insight app and use the "Upload Product File" button to upload the *.html* file you just saved.
+       - The app supports uploading multiple HTML files if you want to analyze more than one product at a time.
+
+    4. **Extract Data and Analyze**:
+       - Follow the on-screen instructions in the app to extract data and analyze the product details.
+
+    #### Notes:
+    - **Product Link Feature**: Currently, the product link feature is down due to Amazon's strong anti-scraping measures without a paid proxy service.
+    """)
+    if st.button("Go Back"):
+        st.session_state['page'] = 1
+        st.rerun()
+
+
 
 def main():
     if 'page' not in st.session_state:
@@ -154,6 +188,9 @@ def main():
         landing_page()
     elif st.session_state['page'] == 2:
         analysis_page()
+
+    elif st.session_state['page'] == 3:
+        steps_page()
     
 
 

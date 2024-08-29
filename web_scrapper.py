@@ -23,6 +23,8 @@ pg = 1
 productUrl = 'https://www.amazon.in/HP-15-6inch-Micro-Edge-Anti-Glare-15s-Eq2143au/dp/B09R1MMMTH/'
 reviewUrl = productUrl.replace('dp', 'product-reviews') + f'?pageNumber={pg}'
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+# headers = {'User-Agent': 'Mozilla/5.0 (compatible; AmazonAdBot/1.0; https://adbot.amazon.com)'} ./robots.txt
+
 def extractReviews(reviewUrl, pg):
     resp = requests.get(reviewUrl, headers=headers, proxies=proxies)
     soup = BeautifulSoup(resp.text, 'html.parser')
