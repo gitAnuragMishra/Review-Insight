@@ -6,6 +6,7 @@ import yaml #type: ignore
 import numpy
 import random
 import torch
+
 os.environ['HF_HOME'] = r'D:\models'
 os.environ['HF_HUB_CACHE'] = r'D:\models'
 
@@ -85,38 +86,53 @@ def classify_overall_sentiment(reviews):
 
 def get_star_rating(aggregated_scores):
 
-    neg_score = aggregated_scores['roberta_neg']
-    neu_score = aggregated_scores['roberta_neu']
-    pos_score = aggregated_scores['roberta_pos']
+    score = normalizer(aggregated_scores)
+    stars = "⭐" * round(score/2)
+    return stars 
+    # neg_score = aggregated_scores['roberta_neg']
+    # neu_score = aggregated_scores['roberta_neu']
+    # pos_score = aggregated_scores['roberta_pos']
     
-    star_ratings = {
-        "5 stars": "⭐⭐⭐⭐⭐",
-        "4 stars": "⭐⭐⭐⭐",
-        "3 stars": "⭐⭐⭐",
-        "2.5 stars": "⭐⭐✨",
-        "2 stars": "⭐⭐",
-        "1 star": "⭐"
-    } # emoji dictionary
+    # star_ratings = {
+    #     "5 stars": "⭐⭐⭐⭐⭐",
+    #     "4 stars": "⭐⭐⭐⭐",
+    #     "3 stars": "⭐⭐⭐",
+    #     "2.5 stars": "⭐⭐✨",
+    #     "2 stars": "⭐⭐",
+    #     "1 star": "⭐"
+    # } # emoji dictionary
     
-    if pos_score > 0.9:
-        return star_ratings["5 stars"]
-    elif pos_score > 0.6 or neg_score < 0.2:
-        return star_ratings["4 stars"]
-    elif neu_score > 0.4:
-        return star_ratings["3 stars"]
-    elif neg_score > 0.6 or pos_score < 0.2:
-        return star_ratings["2 stars"]
-    elif neg_score > 0.9:
-        return star_ratings["1 star"]
-    else:
-        return star_ratings["2.5 stars"]
+    # if pos_score > 0.9:
+    #     return star_ratings["5 stars"]
+    # elif pos_score > 0.6 or neg_score < 0.2:
+    #     return star_ratings["4 stars"]
+    # elif neu_score > 0.4:
+    #     return star_ratings["3 stars"]
+    # elif neg_score > 0.6 or pos_score < 0.2:
+    #     return star_ratings["2 stars"]
+    # elif neg_score > 0.9:
+    #     return star_ratings["1 star"]
+    # else:
+    #     return star_ratings["2.5 stars"]
+
+def normalizer(scores):
+
+    neg = scores['roberta_neg']
+    neu = scores['roberta_neu']
+    pos = scores['roberta_pos']
+
+    score = (neg * 1) + (neu * 5.5) + (pos * 9)
+    
+    return max(1, min(score, 10))
 
 def main():
-    text = "I love this product"
+    text = "The boat airdopes are based on bluetooth v 5.0 and later and they will work great with all the devices having the same bluetooth version i.e v5.0 or newer however in case of older versions there is a lot of latency lag. The voice is also kind of high so you will not be able to listen to anything on 100 percent anyhow... 50 to 60 is an ideal level for all the movies and games as well as music. Your ears will hurt after prolonged usage of these if you dont select the right size of air caps... 3 sizes are already provided inside the box."
     sentiment_score = get_sentiment_score(text)
     sentiment = classify_sentiment(sentiment_score)
     print(sentiment)
-
+    print(sentiment_score)
+    print(normalizer(sentiment_score))
+    print(get_star_rating(sentiment_score))
 
 if __name__ == "__main__":
     main()
